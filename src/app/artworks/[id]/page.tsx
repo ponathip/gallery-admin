@@ -2,7 +2,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import EditArtworkForm from "./EditArtworkForm";
 
 type ArtworkImage = {
-  id: number;
+  id: string;
   imageUrl: string;
   s3Key: string | null;
   altText: string | null;

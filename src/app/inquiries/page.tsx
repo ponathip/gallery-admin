@@ -33,12 +33,17 @@ type InquiryResult = {
   };
 };
 
+type InquiryStatus = "new" | "contacted" | "closed";
+
 type Paginated<T> = {
   data: T[];
   total: number;
   page: number;
   limit: number;
+
+  counts: Record<InquiryStatus, number>;
 };
+
 
 async function getInquiries(searchParams: { page?: string; limit?: string }) {
   const page = searchParams.page ?? "1";

@@ -27,6 +27,25 @@ type ArtworkOption = {
   coverThumbUrl: string | null;
 };
 
+type Exhibition = {
+  title?: string;
+  year?: string;
+  type?: string;
+  venue?: string;
+  description?: string;
+  descriptionTh?: string;
+  statement?: string;
+  statementTh?: string;
+  isPublished?: string;
+  artworks?: ArtworkOption[];
+  coverImageUrl?: string;
+  coverS3Key?: string;
+  coverThumbUrl?: string;
+  coverThumbS3Key?: string;
+  exhibitionDate?: string;
+  images?: PreviewImage[];
+};
+
 export default function CreateExhibitionPage() {
   const [title, setTitle] = useState("");
   const router = useRouter();
@@ -74,7 +93,7 @@ export default function CreateExhibitionPage() {
     if (!id) return;
 
     async function load() {
-      const res = await apiFetch<{ data: any }>(`/exhibitions/${id}`);
+      const res = await apiFetch<{ data: Exhibition }>(`/exhibitions/${id}`);
       const data = res.data;
 
       setTitle(data.title ?? "");
@@ -102,16 +121,19 @@ export default function CreateExhibitionPage() {
         });
       }
 
-      setImages(
-        (data.images ?? []).map((img: any) => ({
-          id: crypto.randomUUID(),
-          file: null,
-          url: img.imageUrl,
-          s3Key: img.s3Key,
-          thumbUrl: img.thumbUrl,
-          thumbS3Key: img.thumbS3Key,
-        })),
-      );
+      if (data.images) {
+        setImages(
+          data.images.map((img) => ({
+            id: crypto.randomUUID(),
+            dbId: img.id,
+            file: null,
+            url: img.url,
+            s3Key: img.s3Key,
+            thumbUrl: img.thumbUrl,
+            thumbS3Key: img.thumbS3Key,
+          }))
+        );
+      }
     }
 
     async function loadArtworks() {

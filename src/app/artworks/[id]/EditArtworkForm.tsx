@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { uploadToS3 } from "@/lib/uploadToS3";
 import { deleteFromS3 } from "@/lib/deleteFromS3";
 import { optimizeImage } from "@/lib/optimizeImage";
 import { DndContext, closestCenter } from "@dnd-kit/core";
@@ -10,6 +9,7 @@ import { apiFetch } from "@/lib/api";
 import { apiData } from "@/lib/api";
 import Swal from "sweetalert2";
 import { uploadToS3WithProgress } from "@/lib/uploadToS3WithProgress";
+import type { DragEndEvent } from "@dnd-kit/core";
 
 import {
   arrayMove,
@@ -21,31 +21,31 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 type Artwork = {
-  id: number;
+  id?: number;
   slug: string;
   title: string;
-  year: string;
-  medium: string;
-  size: string;
-  category: string;
-  status: string;
-  coverImageUrl: string | null;
-  coverS3Key: string | null;
-  coverThumbUrl: string | null;
-  coverThumbS3Key: string | null;
-  description: string;
-  descriptionTh: string;
-  viewCount: number;
-  likeCount: number;
-  isPublished: number;
+  year?: string;
+  medium?: string;
+  size?: string;
+  category?: string;
+  status?: string;
+  coverImageUrl?: string | null;
+  coverS3Key?: string | null;
+  coverThumbUrl?: string | null;
+  coverThumbS3Key?: string | null;
+  description?: string;
+  descriptionTh?: string;
+  viewCount?: number;
+  likeCount?: number;
+  isPublished?: number;
   images: {
-    id: number;
-    imageUrl: string;
-    s3Key: string | null;
-    thumbUrl: string | null;
-    thumbS3Key: string | null;
-    altText: string | null;
-    sortOrder: number;
+    id?: string;
+    imageUrl?: string;
+    s3Key?: string | null;
+    thumbUrl?: string | null;
+    thumbS3Key?: string | null;
+    altText?: string | null;
+    sortOrder?: number;
   }[];
 };
 
@@ -132,7 +132,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
 
     try {
       setUploading(true);
-      const uploaded = await uploadArtworkCover(file, slug);
+      const uploaded = await uploadArtworkCover(file, slug!);
 
       setCoverImageUrl(uploaded.coverImageUrl);
       setCoverS3Key(uploaded.coverS3Key);
@@ -176,8 +176,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
   async function uploadArtworkImage(
     file: File,
     slug: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    p0: (percent: any) => void,
+    _p0: (percent: number) => void,
   ) {
     const largeFile = await optimizeImage(file, "large");
     const thumbFile = await optimizeImage(file, "thumb");
@@ -211,7 +210,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
       const uploadedImages = [];
 
       for (let i = 0; i < files.length; i++) {
-        const uploaded = await uploadArtworkImage(files[i], slug, (percent) => {
+        const uploaded = await uploadArtworkImage(files[i], slug!, (percent) => {
           const totalPercent = Math.round(
             ((i + percent / 100) / files.length) * 100,
           );
@@ -242,7 +241,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
       setGalleryImages((prev) => [
         ...prev,
         ...payloadImages.map((img, index) => ({
-          id: Date.now() + index, // fake id
+          id: String(Date.now() + index), // fake id
           imageUrl: img.imageUrl,
           s3Key: img.s3Key,
           thumbUrl: img.thumbUrl,
@@ -265,7 +264,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
     }
   }
 
-  async function handleDeleteImage(imageId: number) {
+  async function handleDeleteImage(imageId: string) {
     if (uploading || saving) return;
     const target = galleryImages.find((img) => img.id === imageId);
 
@@ -348,7 +347,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
     }
   }
 
-  async function handleDragEnd(event: any) {
+  async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
     if (!over || active.id === over.id) return;
@@ -485,7 +484,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={galleryImages.map((img) => img.id)}
+              items={galleryImages.map((img) => String(img.id))}
               strategy={verticalListSortingStrategy}
             >
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -505,7 +504,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
                       <button
                         type="button"
                         disabled={isBusy}
-                        onClick={() => handleDeleteImage(image.id)}
+                        onClick={() => handleDeleteImage(String(image.id))}
                         className="absolute right-3 top-3 rounded-full bg-white px-3 py-2 text-xs opacity-0 shadow transition group-hover:opacity-100"
                       >
                         Delete

@@ -20,6 +20,37 @@ type PreviewImage = {
   thumbS3Key?: string | null;
 };
 
+type WallProjectResponse = {
+  data: {
+    title?: string;
+    location?: string;
+    year?: string;
+    space_type?: string;
+    status?: string;
+    spaceType?: string;
+    description?: string;
+    description_th?: string;
+    concept?: string;
+    concept_th?: string;
+    descriptionTh?: string;
+    conceptTh?: string;
+    cover_image_url?: string;
+    cover_s3_key?: string;
+    cover_thumb_url?: string;
+    cover_thumb_s3_key?: string;
+    before_image_url?: string;
+    before_s3_key?: string;
+    before_thumb_url?: string;
+    before_thumb_s3_key?: string;
+    after_image_url?: string;
+    after_s3_key?: string;
+    after_thumb_s3_key?: string;
+    is_published?: string;
+    after_thumb_url?: string;
+    images?: PreviewImage[];
+  };
+};
+
 function makePreview(file: File): PreviewImage {
   return {
     id: crypto.randomUUID(),
@@ -59,7 +90,7 @@ export default function CreateWallPaintingPage() {
     if (!id) return;
 
     async function load() {
-      const res = await apiFetch(`/wall-projects/${id}`);
+      const res = await apiFetch<WallProjectResponse>(`/wall-projects/${id}`);
       const data = res.data;
 
       setTitle(data.title || "");
@@ -90,9 +121,9 @@ export default function CreateWallPaintingPage() {
           id: crypto.randomUUID(),
           file: null,
           url: data.before_image_url,
-          s3Key: data.cover_s3_key,
-          thumbUrl: data.cover_thumb_url,
-          thumbS3Key: data.cover_thumb_s3_key,
+          s3Key: data.before_s3_key,
+          thumbUrl: data.before_thumb_url,
+          thumbS3Key: data.before_thumb_s3_key,
         });
       }
 
@@ -101,9 +132,9 @@ export default function CreateWallPaintingPage() {
           id: crypto.randomUUID(),
           file: null,
           url: data.after_image_url,
-          s3Key: data.cover_s3_key,
-          thumbUrl: data.cover_thumb_url,
-          thumbS3Key: data.cover_thumb_s3_key,
+          s3Key: data.after_s3_key,
+          thumbUrl: data.after_thumb_url,
+          thumbS3Key: data.after_thumb_s3_key,
         });
       }
 
