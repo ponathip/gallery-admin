@@ -51,7 +51,7 @@ export default function LoginForm() {
           Admin Login
         </p>
 
-        <h1 className="mt-4 font-serif text-black/50 text-5xl">PhanatchaNuch</h1>
+        <h1 className="max-w-full text-[38px] font-serif text-black/50 leading-none tracking-tight text-neutral-500 sm:text-5xl first-letter:text-[1.55em] first-letter:mr-[1px]">PhanatchaNuch</h1>
 
         <div className="mt-8 space-y-5">
           <div>
