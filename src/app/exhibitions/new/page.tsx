@@ -131,7 +131,7 @@ export default function CreateExhibitionPage() {
             s3Key: img.s3Key,
             thumbUrl: img.thumbUrl,
             thumbS3Key: img.thumbS3Key,
-          }))
+          })),
         );
       }
     }
@@ -283,7 +283,7 @@ export default function CreateExhibitionPage() {
 
       toast.success("Saved");
       setDeletedImages([]);
-      router.push("/exhibitions");
+      router.push(`/exhibitions?refresh=${Date.now()}`);
     } finally {
       setSaving(false);
       setTimeout(() => setUploadProgress(null), 500);
@@ -366,7 +366,7 @@ export default function CreateExhibitionPage() {
         showConfirmButton: false,
       });
 
-      router.push("/exhibitions");
+      router.push(`/exhibitions?refresh=${Date.now()}`);
     } catch (error) {
       console.error(error);
 
@@ -715,9 +715,11 @@ export default function CreateExhibitionPage() {
 
             <label className="mt-6 flex items-center justify-between border-y border-black/10 py-5">
               <span className="text-sm text-black/60">Published</span>
-              <input type="checkbox"
+              <input
+                type="checkbox"
                 checked={isPublished}
-                onChange={(e) => setIsPublished(e.target.checked)} />
+                onChange={(e) => setIsPublished(e.target.checked)}
+              />
             </label>
 
             {uploadProgress !== null && (

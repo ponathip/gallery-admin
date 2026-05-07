@@ -182,39 +182,35 @@ export default function CreateWallPaintingPage() {
   }
 
   function removeImage(id: string) {
-  setImages((prev) => {
-    const target = prev.find((img) => img.id === id);
+    setImages((prev) => {
+      const target = prev.find((img) => img.id === id);
 
-    if (target && !target.file) {
-      setDeletedFiles((old) =>
-        [
-          ...old,
-          target.s3Key,
-          target.thumbS3Key,
-        ].filter(Boolean) as string[]
+      if (target && !target.file) {
+        setDeletedFiles(
+          (old) =>
+            [...old, target.s3Key, target.thumbS3Key].filter(
+              Boolean,
+            ) as string[],
+        );
+      }
+
+      return prev.filter((img) => img.id !== id);
+    });
+  }
+
+  function removeSingleImage(
+    image: PreviewImage | null,
+    setter: (image: PreviewImage | null) => void,
+  ) {
+    if (image && !image.file) {
+      setDeletedFiles(
+        (old) =>
+          [...old, image.s3Key, image.thumbS3Key].filter(Boolean) as string[],
       );
     }
 
-    return prev.filter((img) => img.id !== id);
-  });
-}
-
-function removeSingleImage(
-  image: PreviewImage | null,
-  setter: (image: PreviewImage | null) => void
-) {
-  if (image && !image.file) {
-    setDeletedFiles((old) =>
-      [
-        ...old,
-        image.s3Key,
-        image.thumbS3Key,
-      ].filter(Boolean) as string[]
-    );
+    setter(null);
   }
-
-  setter(null);
-}
 
   async function moveImage(index: number, direction: "up" | "down") {
     const next = [...images];
@@ -287,7 +283,7 @@ function removeSingleImage(
         showConfirmButton: false,
       });
 
-      router.push("/wall-painting");
+      router.push(`/wall-painting?refresh=${Date.now()}`);
     } catch (e) {
       await Swal.fire({
         icon: "error",
@@ -298,33 +294,33 @@ function removeSingleImage(
   }
 
   async function uploadWallSingle(
-  file: File,
-  slug: string,
-  type: string,
-  onProgress?: (percent: number) => void
-) {
-  const large = await optimizeImage(file, "large");
-  const thumb = await optimizeImage(file, "thumb");
+    file: File,
+    slug: string,
+    type: string,
+    onProgress?: (percent: number) => void,
+  ) {
+    const large = await optimizeImage(file, "large");
+    const thumb = await optimizeImage(file, "thumb");
 
-  const upLarge = await uploadToS3WithProgress(
-    large,
-    `wall/${slug}/${type}`,
-    (p) => onProgress?.(Math.round(p.percent * 0.7))
-  );
+    const upLarge = await uploadToS3WithProgress(
+      large,
+      `wall/${slug}/${type}`,
+      (p) => onProgress?.(Math.round(p.percent * 0.7)),
+    );
 
-  const upThumb = await uploadToS3WithProgress(
-    thumb,
-    `wall/${slug}/${type}-thumb`,
-    (p) => onProgress?.(70 + Math.round(p.percent * 0.3))
-  );
+    const upThumb = await uploadToS3WithProgress(
+      thumb,
+      `wall/${slug}/${type}-thumb`,
+      (p) => onProgress?.(70 + Math.round(p.percent * 0.3)),
+    );
 
-  return {
-    url: upLarge.url,
-    s3Key: upLarge.key,
-    thumbUrl: upThumb.url,
-    thumbS3Key: upThumb.key,
-  };
-}
+    return {
+      url: upLarge.url,
+      s3Key: upLarge.key,
+      thumbUrl: upThumb.url,
+      thumbS3Key: upThumb.key,
+    };
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -334,7 +330,12 @@ function removeSingleImage(
     try {
       // 🔥 upload cover / before / after
       const cover = coverImage?.file
-        ? await uploadWallSingle(coverImage.file, slug, "cover", setUploadProgress)
+        ? await uploadWallSingle(
+            coverImage.file,
+            slug,
+            "cover",
+            setUploadProgress,
+          )
         : coverImage?.url
           ? {
               url: coverImage.url,
@@ -345,7 +346,12 @@ function removeSingleImage(
           : null;
 
       const before = beforeImage?.file
-        ? await uploadWallSingle(beforeImage.file, slug, "before", setUploadProgress)
+        ? await uploadWallSingle(
+            beforeImage.file,
+            slug,
+            "before",
+            setUploadProgress,
+          )
         : beforeImage?.url
           ? {
               url: beforeImage.url,
@@ -356,7 +362,12 @@ function removeSingleImage(
           : null;
 
       const after = afterImage?.file
-        ? await uploadWallSingle(afterImage.file, slug, "after", setUploadProgress)
+        ? await uploadWallSingle(
+            afterImage.file,
+            slug,
+            "after",
+            setUploadProgress,
+          )
         : afterImage?.url
           ? {
               url: afterImage.url,
@@ -445,6 +456,7 @@ function removeSingleImage(
         text: "บันทึกสำเร็จ!",
       });
       setDeletedFiles([]);
+      router.refresh();
       router.push("/wall-painting");
     } catch (e) {
       console.error(e);
@@ -770,7 +782,12 @@ function removeSingleImage(
               type="submit"
               className="mt-6 flex w-full items-center justify-between rounded-full bg-black px-6 py-4 text-xs uppercase tracking-[0.18em] text-white transition hover:bg-black/80"
             >
-              {isBusy ? "Processing..." : isEdit ? "Update Project" : "Save Project"} <span>→</span>
+              {isBusy
+                ? "Processing..."
+                : isEdit
+                  ? "Update Project"
+                  : "Save Project"}{" "}
+              <span>→</span>
             </button>
             {isEdit && (
               <button

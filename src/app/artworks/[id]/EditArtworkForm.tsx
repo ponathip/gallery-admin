@@ -111,7 +111,7 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
         showConfirmButton: false,
         timer: 1500,
       });
-      router.refresh();
+      router.push(`/artworks?refresh=${Date.now()}`);
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -210,12 +210,16 @@ export default function EditArtworkForm({ artwork }: { artwork: Artwork }) {
       const uploadedImages = [];
 
       for (let i = 0; i < files.length; i++) {
-        const uploaded = await uploadArtworkImage(files[i], slug!, (percent) => {
-          const totalPercent = Math.round(
-            ((i + percent / 100) / files.length) * 100,
-          );
-          setUploadProgress(totalPercent);
-        });
+        const uploaded = await uploadArtworkImage(
+          files[i],
+          slug!,
+          (percent) => {
+            const totalPercent = Math.round(
+              ((i + percent / 100) / files.length) * 100,
+            );
+            setUploadProgress(totalPercent);
+          },
+        );
 
         uploadedImages.push(uploaded);
       }

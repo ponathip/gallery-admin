@@ -181,7 +181,7 @@ export default function CreateArtworkPage() {
         success: "บันทึกสำเร็จ 🎉",
         error: "บันทึกไม่สำเร็จ ❌",
       });
-      router.push("/artworks");
+      router.push(`/artworks?refresh=${Date.now()}`);
     } catch (error) {
       await Swal.fire({
         icon: "error",
