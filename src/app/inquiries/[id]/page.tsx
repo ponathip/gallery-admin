@@ -93,7 +93,7 @@ export default async function InquiryDetailPage({
             </div>
           </div>
         </aside>
-        
+
       </div>
     </AdminLayout>
   );

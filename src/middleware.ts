@@ -12,10 +12,7 @@ export function middleware(req: NextRequest) {
   if (!token && !isPublic) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
-
-  console.log(token && pathname);
   
-
   if (token && pathname === "/login") {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }

@@ -67,63 +67,63 @@ export default function SettingsForm({
     const optimized = await optimizeImage(file, "large");
 
     const uploaded = await uploadToS3WithProgress(
-        optimized,
-        `settings/${folder}`,
+      optimized,
+      `settings/${folder}`,
     );
 
     return {
-        url: uploaded.url,
-        key: uploaded.key,
+      url: uploaded.url,
+      key: uploaded.key,
     };
+  }
+
+  async function handleProfileImageChange(fileList: FileList | null) {
+    const file = fileList?.[0];
+    if (!file) return;
+
+    try {
+      setSaving(true);
+
+      const uploaded = await uploadSettingImage(file, "profile");
+
+      setSettings((prev) => ({
+        ...prev,
+        profile_image_url: uploaded.url,
+        profile_s3_key: uploaded.key,
+      }));
+
+      toast.success("Profile image uploaded");
+    } catch (error) {
+      console.error(error);
+      toast.error("Upload failed");
+    } finally {
+      setSaving(false);
     }
-
-    async function handleProfileImageChange(fileList: FileList | null) {
-  const file = fileList?.[0];
-  if (!file) return;
-
-  try {
-    setSaving(true);
-
-    const uploaded = await uploadSettingImage(file, "profile");
-
-    setSettings((prev) => ({
-      ...prev,
-      profile_image_url: uploaded.url,
-      profile_s3_key: uploaded.key,
-    }));
-
-    toast.success("Profile image uploaded");
-  } catch (error) {
-    console.error(error);
-    toast.error("Upload failed");
-  } finally {
-    setSaving(false);
   }
-}
 
-async function handleOgImageChange(fileList: FileList | null) {
-  const file = fileList?.[0];
-  if (!file) return;
+  async function handleOgImageChange(fileList: FileList | null) {
+    const file = fileList?.[0];
+    if (!file) return;
 
-  try {
-    setSaving(true);
+    try {
+      setSaving(true);
 
-    const uploaded = await uploadSettingImage(file, "og");
+      const uploaded = await uploadSettingImage(file, "og");
 
-    setSettings((prev) => ({
-      ...prev,
-      default_og_image: uploaded.url,
-      default_og_s3_key: uploaded.key,
-    }));
+      setSettings((prev) => ({
+        ...prev,
+        default_og_image: uploaded.url,
+        default_og_s3_key: uploaded.key,
+      }));
 
-    toast.success("OG image uploaded");
-  } catch (error) {
-    console.error(error);
-    toast.error("Upload failed");
-  } finally {
-    setSaving(false);
+      toast.success("OG image uploaded");
+    } catch (error) {
+      console.error(error);
+      toast.error("Upload failed");
+    } finally {
+      setSaving(false);
+    }
   }
-}
 
   return (
     <form
@@ -184,54 +184,54 @@ async function handleOgImageChange(fileList: FileList | null) {
             />
 
             <div>
-  <label className="text-xs uppercase tracking-[0.2em] text-black/40">
-    Default OG Image
-  </label>
+              <label className="text-xs uppercase tracking-[0.2em] text-black/40">
+                Default OG Image
+              </label>
 
-  {settings.default_og_image && (
-    <img
-      src={settings.default_og_image}
-      alt="Default OG"
-      className="mt-3 aspect-[1200/630] w-full max-w-md rounded-xl object-cover"
-    />
-  )}
+              {settings.default_og_image && (
+                <img
+                  src={settings.default_og_image}
+                  alt="Default OG"
+                  className="mt-3 aspect-[1200/630] w-full max-w-md rounded-xl object-cover"
+                />
+              )}
 
-  <input
-    type="file"
-    accept="image/*"
-    disabled={saving}
-    onChange={(e) => handleOgImageChange(e.target.files)}
-    className="mt-4 block w-full text-sm"
-  />
-</div>
+              <input
+                type="file"
+                accept="image/*"
+                disabled={saving}
+                onChange={(e) => handleOgImageChange(e.target.files)}
+                className="mt-4 block w-full text-sm"
+              />
+            </div>
           </div>
         </div>
 
         <div className="rounded-2xl border border-black/10 bg-white p-6">
           <h2 className="font-serif text-3xl">Artist Profile</h2>
 
-                <div className="mt-6 grid gap-5">
-                <div>
-        <label className="text-xs uppercase tracking-[0.2em] text-black/40">
-            Profile Image
-        </label>
+          <div className="mt-6 grid gap-5">
+            <div>
+              <label className="text-xs uppercase tracking-[0.2em] text-black/40">
+                Profile Image
+              </label>
 
-        {settings.profile_image_url && (
-            <img
-            src={settings.profile_image_url}
-            alt="Profile"
-            className="mt-3 aspect-[4/5] w-full max-w-xs rounded-xl object-cover"
-            />
-        )}
+              {settings.profile_image_url && (
+                <img
+                  src={settings.profile_image_url}
+                  alt="Profile"
+                  className="mt-3 aspect-[4/5] w-full max-w-xs rounded-xl object-cover"
+                />
+              )}
 
-        <input
-            type="file"
-            accept="image/*"
-            disabled={saving}
-            onChange={(e) => handleProfileImageChange(e.target.files)}
-            className="mt-4 block w-full text-sm"
-        />
-        </div>
+              <input
+                type="file"
+                accept="image/*"
+                disabled={saving}
+                onChange={(e) => handleProfileImageChange(e.target.files)}
+                className="mt-4 block w-full text-sm"
+              />
+            </div>
 
             <Input
               label="About Title EN"
