@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { apiFetch } from "@/lib/api";
+import Swal from "sweetalert2";
 
 export default function ReplyBox({ id }: { id: number }) {
   const [message, setMessage] = useState("");
@@ -18,11 +19,21 @@ export default function ReplyBox({ id }: { id: number }) {
         json: { message },
       });
 
-      alert("ส่งอีเมลสำเร็จ");
+      Swal.fire({
+        icon: "success",
+        title: "ส่งอีเมลล์สำเร็จ!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       setMessage("");
     } catch (error) {
       console.error(error);
-      alert("ส่งอีเมลไม่สำเร็จ");
+      Swal.fire({
+        icon: "error",
+        title: "ส่งอีเมลล์ไม่สำเร็จ!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } finally {
       setSending(false);
     }
