@@ -252,9 +252,9 @@ export default function CreateArtworkPage() {
                     onChange={(e) => setCategory(e.target.value)}
                     className="mt-3 w-full rounded-xl border border-black/10 bg-[#f7f7f4] px-4 py-4 outline-none focus:border-black"
                   >
-                    <option>Mixed Media</option>
-                    <option>Painting</option>
-                    <option>Paper Work</option>
+                    <option value="Mixed Media">Mixed Media</option>
+                    <option value="Painting">Painting</option>
+                    <option value="Paper Work">Paper Work</option>
                   </select>
                 </div>
               </div>
@@ -294,10 +294,10 @@ export default function CreateArtworkPage() {
                   onChange={(e) => setStatus(e.target.value)}
                   className="mt-3 w-full rounded-xl border border-black/10 bg-[#f7f7f4] px-4 py-4 outline-none focus:border-black"
                 >
-                  <option>Available</option>
-                  <option>Reserved</option>
-                  <option>Sold</option>
-                  <option>Private</option>
+                  <option value="available">Available</option>
+                  <option value="reserved">Reserved</option>
+                  <option value="sold">Sold</option>
+                  <option value="private">Private</option>
                 </select>
               </div>
 

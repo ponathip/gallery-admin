@@ -590,9 +590,9 @@ export default function CreateWallPaintingPage() {
                     onChange={(e) => setStatus(e.target.value)}
                     className="mt-3 w-full rounded-xl border border-black/10 bg-[#f7f7f4] px-4 py-4 outline-none focus:border-black"
                   >
-                    <option>Completed</option>
-                    <option>In Progress</option>
-                    <option>Concept</option>
+                    <option value="completed">Completed</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="concept">Concept</option>
                   </select>
                 </div>
               </div>

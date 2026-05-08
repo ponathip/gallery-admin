@@ -9,15 +9,6 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import AdminLayout from "@/components/admin/AdminLayout";
 
-type PreviewImage = {
-  id: string;
-  file: File | null;
-  url: string;
-  s3Key?: string | null;
-  thumbUrl?: string | null;
-  thumbS3Key?: string | null;
-};
-
 type ArtworkOption = {
   id: number;
   title: string;
@@ -44,6 +35,15 @@ type Exhibition = {
   coverThumbS3Key?: string;
   exhibitionDate?: string;
   images?: PreviewImage[];
+};
+type PreviewImage = {
+  id: string;
+  file: File | null;
+  url: string;
+  imageUrl?: string | null;
+  s3Key?: string | null;
+  thumbUrl?: string | null;
+  thumbS3Key?: string | null;
 };
 
 export default function CreateExhibitionPage() {
@@ -127,7 +127,7 @@ export default function CreateExhibitionPage() {
             id: crypto.randomUUID(),
             dbId: img.id,
             file: null,
-            url: img.url,
+            url: img.imageUrl ?? img.url,
             s3Key: img.s3Key,
             thumbUrl: img.thumbUrl,
             thumbS3Key: img.thumbS3Key,
