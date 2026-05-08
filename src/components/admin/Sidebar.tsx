@@ -16,7 +16,7 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
         mobile ? "block h-full" : "hidden min-h-screen lg:block"
       }`}
     >
-      <div className="font-serif text-3xl first-letter:text-[1.18em] first-letter:mr-[1px]">PhanatchaNuch</div>
+      <div className="font-serif text-3xl first-letter:text-[1.13em] first-letter:mr-[1px]">PhanatchaNuch</div>
 
       <nav className="mt-12 space-y-2">
         {menus.map((item) => (
