@@ -75,7 +75,7 @@ export default function CreateWallPaintingPage() {
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [location, setLocation] = useState("");
   const [spaceType, setSpaceType] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("completed");
   const [description, setDescription] = useState("");
   const [descriptionTh, setDescriptionTh] = useState("");
   const [concept, setConcept] = useState("");
