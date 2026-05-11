@@ -120,9 +120,9 @@ export default async function WallPaintingPage({
           Search
         </button>
       </form>
-    
+
       <WallProjectSortableTable projects={projects} />
-      
+
       <div className="mt-5 flex items-center justify-between text-sm">
         <p className="text-black/50">Total {result.total} items</p>
 

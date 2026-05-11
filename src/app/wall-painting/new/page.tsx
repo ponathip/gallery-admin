@@ -46,6 +46,7 @@ type WallProjectResponse = {
     after_s3_key?: string;
     after_thumb_s3_key?: string;
     is_published?: string;
+    video_url?: string;
     after_thumb_url?: string;
     images?: PreviewImage[];
   };
@@ -83,6 +84,7 @@ export default function CreateWallPaintingPage() {
   const [isPublished, setIsPublished] = useState(true);
 
   const [deletedFiles, setDeletedFiles] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
 
   const isBusy = saving || uploadProgress !== null;
 
@@ -103,6 +105,7 @@ export default function CreateWallPaintingPage() {
       setConcept(data.concept || "");
       setConceptTh(data.concept_th || data.conceptTh || "");
       setIsPublished(!!data.is_published);
+      setVideoUrl(data.video_url || "");
 
       // preview รูปเดิม (ไม่มี file แต่มี url)
       if (data.cover_image_url) {
@@ -432,6 +435,7 @@ export default function CreateWallPaintingPage() {
         descriptionTh,
         concept,
         conceptTh,
+        videoUrl,
         isPublished,
         images: uploadedImages,
         deletedFiles,
@@ -643,6 +647,23 @@ export default function CreateWallPaintingPage() {
                   className="mt-3 h-36 w-full rounded-xl border border-black/10 bg-[#f7f7f4] px-4 py-4 outline-none focus:border-black"
                   placeholder="คอนเซปต์ของโปรเจกต์..."
                 />
+              </div>
+
+              <div>
+                <label className="text-xs uppercase tracking-[0.2em] text-black/40">
+                  Video / Reel URL
+                </label>
+
+                <input
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  className="mt-3 w-full rounded-xl border border-black/10 bg-[#f7f7f4] px-4 py-4 outline-none focus:border-black"
+                  placeholder="Paste YouTube / TikTok / Instagram Reel / Facebook link"
+                />
+
+                <p className="mt-3 text-xs text-black/40">
+                  รองรับ YouTube, TikTok, Instagram Reel และ Facebook Video
+                </p>
               </div>
             </div>
           </div>
