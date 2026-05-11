@@ -341,7 +341,7 @@ export default function CreateExhibitionPage() {
 
     const result = await Swal.fire({
       title: "Delete this exhibition?",
-      text: "This will delete exhibition data and images from S3.",
+      text: "This will delete exhibition data and images.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#000",

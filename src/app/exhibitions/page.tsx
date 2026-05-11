@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { apiFetch } from "@/lib/api";
+import ExhibitionSortableTable from "./ExhibitionSortableTable";
 
 type Exhibition = {
   id: number;
@@ -94,8 +95,8 @@ export default async function ExhibitionsPage({
           Search
         </button>
       </form>
-
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
+      <ExhibitionSortableTable exhibitions={exhibitions} />
+      {/* <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
         {exhibitions.map((item) => (
           <Link
             key={item.id}
@@ -132,7 +133,7 @@ export default async function ExhibitionsPage({
             </div>
           </Link>
         ))}
-      </div>
+      </div> */}
 
       <div className="mt-5 flex items-center justify-between text-sm">
         <p className="text-black/50">Total {result.total} items</p>

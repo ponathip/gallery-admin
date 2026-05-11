@@ -2,6 +2,7 @@ import Link from "next/link";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { apiFetch } from "@/lib/api";
 import PublishToggle from "./PublishToggle";
+import WallProjectSortableTable from "./WallProjectSortableTable";
 
 type WallProject = {
   id: number;
@@ -119,59 +120,9 @@ export default async function WallPaintingPage({
           Search
         </button>
       </form>
-
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
-        <div className="hidden grid-cols-[80px_1fr_160px_130px_100px_100px] gap-4 border-b border-black/10 px-5 py-4 text-xs uppercase tracking-[0.18em] text-black/40 lg:grid">
-          <div>Image</div>
-          <div>Project</div>
-          <div>Type</div>
-          <div>Status</div>
-          <div>Views</div>
-          <div>Likes</div>
-          {/* <div>Publish</div> */}
-        </div>
-
-        {projects.map((project) => (
-          <Link
-            href={`/wall-painting/${project.id}`}
-            key={project.id}
-            className="grid gap-4 border-b border-black/10 px-5 py-4 transition hover:bg-black/[0.03] lg:grid-cols-[80px_1fr_160px_130px_100px_100px] lg:items-center"
-          >
-            <div className="h-20 w-20 overflow-hidden rounded-xl bg-black/5 lg:h-16 lg:w-16">
-              <img
-                src={project.coverImageUrl}
-                alt={project.title}
-                className="h-full w-full object-cover"
-              />
-            </div>
-
-            <div>
-              <p className="font-serif text-2xl">{project.title}</p>
-              <p className="mt-1 text-sm text-black/45">
-                {project.year} · {project.location}
-              </p>
-            </div>
-
-            <div className="text-sm text-black/60">{project.spaceType}</div>
-
-            <div>
-              <span
-                className={`rounded-full px-3 py-1 text-xs ${getStatusClass(project.status)}`}
-              >
-                {project.status}
-              </span>
-            </div>
-
-            <div className="text-sm text-black/60">{project.views}</div>
-            <div className="text-sm text-black/60">{project.likes}</div>
-            {/* <div className="text-sm text-black/60"><PublishToggle
-               id={Number(project.id)}
-                isPublished={project.isPublished} />
-            </div> */}
-          </Link>
-        ))}
-      </div>
-
+    
+      <WallProjectSortableTable projects={projects} />
+      
       <div className="mt-5 flex items-center justify-between text-sm">
         <p className="text-black/50">Total {result.total} items</p>
 

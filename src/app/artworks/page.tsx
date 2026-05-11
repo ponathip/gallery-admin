@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { apiFetch } from "@/lib/api";
+import ArtworkSortableTable from "./ArtworkSortableTable";
 
 type Artwork = {
   id: number;
@@ -94,60 +95,7 @@ export default async function ArtworksPage({
         </button>
       </form>
 
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-white">
-        <div className="hidden grid gap-4 lg:grid-cols-[80px_1fr_130px_120px_100px_100px] gap-4 border-b border-black/10 px-5 py-4 text-xs uppercase tracking-[0.18em] text-black/40 lg:grid">
-          <div>Image</div>
-          <div>Title</div>
-          <div>Category</div>
-          <div>Status</div>
-          <div>Views</div>
-          <div>Likes</div>
-        </div>
-
-        {artworks.length === 0 ? (
-          <div className="p-8 text-sm text-black/50">No artworks yet.</div>
-        ) : (
-          artworks.map((art) => (
-            <Link
-              href={`/artworks/${art.id}`}
-              key={art.id}
-              className="grid gap-4 border-b border-black/10 px-5 py-4 transition hover:bg-black/[0.03] lg:grid-cols-[80px_1fr_130px_120px_100px_100px] lg:items-center"
-            >
-              <div className="h-20 w-20 overflow-hidden rounded-xl bg-black/5 lg:h-16 lg:w-16">
-                {art.coverImageUrl ? (
-                  <img
-                    src={art.coverImageUrl}
-                    alt={art.title}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-xs text-black/30">
-                    No image
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <p className="font-serif text-2xl">{art.title}</p>
-                <p className="mt-1 text-sm text-black/45">
-                  {art.year} · {art.medium}
-                </p>
-              </div>
-
-              <div className="text-sm text-black/60">{art.category}</div>
-
-              <div>
-                <span className="rounded-full bg-black/5 px-3 py-1 text-xs text-black/60">
-                  {art.status}
-                </span>
-              </div>
-
-              <div className="text-sm text-black/60">{art.viewCount}</div>
-              <div className="text-sm text-black/60">{art.likeCount}</div>
-            </Link>
-          ))
-        )}
-      </div>
+      <ArtworkSortableTable artworks={artworks} />
 
       <div className="mt-5 flex items-center justify-between text-sm">
         <p className="text-black/50">Total {result.total} items</p>
